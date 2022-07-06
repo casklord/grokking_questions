@@ -1,5 +1,3 @@
-import java.lang.System.out;
-import java.math.*;
 import java.util.*;
 
 class AverageOfSubarrayOfSizeK {
@@ -141,3 +139,78 @@ class LongestSubstringKDistinct {
          + LongestSubstringKDistinct.findLength("cbbebi", 3));
     }
   }
+
+class NoRepeatSubstring {
+  
+  public static int findLength(String str) {
+    int windowStart = 0;
+    int maxLength = 0;
+    Map<Character, Integer> letters = new HashMap<>();
+
+    for(int windowEnd = 0; windowEnd < str.length(); windowEnd ++){
+      char end = str.charAt(windowEnd);
+      // case when adding end letter causes there to be duplicates
+      // increment window start until there is not
+      while (letters.containsKey(end)){
+        char start = str.charAt(windowStart);
+        letters.put(start, letters.get(start) -1);
+        if (letters.get(start) == 0){
+          letters.remove(start);
+        }
+        windowStart ++;
+      }
+    maxLength = Math.max(maxLength, windowEnd - windowStart + 1);    
+      letters.put(end, 1);
+    }
+    return maxLength;
+  }
+
+    public static int findLengthSolution(String str) {
+      int windowStart = 0, maxLength = 0;
+      Map<Character, Integer> charIndexMap = new HashMap<>();
+      // try to extend the range [windowStart, windowEnd]
+      for (int windowEnd = 0; windowEnd < str.length(); windowEnd++) {
+        char rightChar = str.charAt(windowEnd);
+        // if the map already contains the 'rightChar', shrink the window from the 
+        // beginning so that we have only one occurrence of 'rightChar'
+        if (charIndexMap.containsKey(rightChar)) {
+          // this is tricky; in the current window, we will not have any 'rightChar' after 
+          // its previous index and if 'windowStart' is already ahead of the last index of
+          // 'rightChar', we'll keep 'windowStart'
+          windowStart = Math.max(windowStart, charIndexMap.get(rightChar) + 1);
+        }
+        charIndexMap.put(rightChar, windowEnd); // insert the 'rightChar' into the map
+        // remember the maximum length so far
+        maxLength = Math.max(maxLength, windowEnd - windowStart + 1); 
+      }
+  
+      return maxLength;
+    }
+  
+    public static void main(String[] args) {
+      System.out.println("Length of the longest substring: " 
+                            + NoRepeatSubstring.findLength("kajhsdfklajshdkjflahlsjkdhflkajshdlfjkahsdkljfhaklsdjfhasdlfjahsd"));
+      System.out.println("Length of the longest substring: " 
+                            + NoRepeatSubstring.findLength("afiuflnrliauhzaweuifhaldkvcpaefakjdspaweaklsdfkajsdf"));
+      System.out.println("Length of the longest substring: " 
+                            + NoRepeatSubstring.findLength("qpoweipqweoiruqpoirtyqbwepcijabpiwecjbacwpjefcbapwijecbfaipweu"));
+      System.out.println("Length of the longest substring: " 
+                            + NoRepeatSubstring.findLengthSolution("kajhsdfklajshdkjflahlsjkdhflkajshdlfjkahsdkljfhaklsdjfhasdlfjahsd"));
+      System.out.println("Length of the longest substring: " 
+                            + NoRepeatSubstring.findLengthSolution("afiuflnrliauhzaweuifhaldkvcpaefakjdspaweaklsdfkajsdf"));
+      System.out.println("Length of the longest substring: " 
+                            + NoRepeatSubstring.findLengthSolution("qpoweipqweoiruqpoirtyqbwepcijabpiwecjbacwpjefcbapwijecbfaipweu"));
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
