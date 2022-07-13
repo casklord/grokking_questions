@@ -2,15 +2,15 @@ import java.util.*;
 
 class PairWithTargetSum {
 
-    public static int[] search(int[] arr, int targetSum) {
-        int start = 0; int end = arr.length - 1;
-        while(start < end){
-            if (arr[start] + arr[end] < targetSum) start ++;
-            if (arr[start] + arr[end] > targetSum) end --;
-            if (arr[start] + arr[end] == targetSum) return new int[] { start, end};
+  public static int[] search(int[] arr, int targetSum) {
+      int start = 0; int end = arr.length - 1;
+      while(start < end){
+          if (arr[start] + arr[end] < targetSum) start ++;
+          if (arr[start] + arr[end] > targetSum) end --;
+          if (arr[start] + arr[end] == targetSum) return new int[] { start, end};
 
-        }
-        return new int[] { -1, -1};
+      }
+      return new int[] { -1, -1};
     }
     public static int[] searchSolution(int[] arr, int targetSum) {
       int left = 0, right = arr.length - 1;
@@ -220,7 +220,6 @@ class SubarrayProductLessThanK {
       } else {
         windowStart ++;
       }
-
     }
     return subArrays;
   }
@@ -319,68 +318,80 @@ class DutchFlag {
   }
 }
 
-class BackspaceCompare {
-  public static boolean compare(String str1, String str2) {
-    int i = str1.length() - 1;
-    int j = str2.length() - 1;
-    while(true){
-      char current1 = str1.charAt(i);
-      char current2 = str2.charAt(j);
-      while(current1 == '#'){
-        i -= 2;
-        current1 = str1.charAt(i);
-      }
-      while(current2 == '#'){
-        i -= 2;
-        current2 = str2.charAt(i);
-      }
-
+class ShortestWindowSort {
+  public static int sort(int[] arr) {
+    int start = 0; int end = arr.length - 1;
+    while(end > 0 && arr[end] >= arr[end -1]){
+      end --;
     }
+
+    if (end == 0) return 0;
+
+    while(start < arr.length - 1  && arr[start] <= arr[start + 1]){
+      start ++;
+    }
+
+    int max = Integer.MIN_VALUE; int min = Integer.MAX_VALUE;
+    for (int i = start + 1; i < end; i ++){
+      max = Math.max(max, arr[i]);
+      min = Math.min(min, arr[i]);
+    }
+  
+    while(end < arr.length - 1 && arr[end + 1] < max  ){
+      end ++;
+    }
+    while(start > 0 && arr[start - 1] > min ){
+      start --;
+    }
+
+
+
+
+    return end - start + 1;
+
+    
 
   }
-  public static boolean compareSolution(String str1, String str2) {
-    // use two pointer approach to compare the strings
-    int index1 = str1.length() - 1, index2 = str2.length() - 1;
-    while (index1 >= 0 || index2 >= 0) {
+  public static int sortSolution(int[] arr) {
+    int low = 0, high = arr.length - 1;
+    // find the first number out of sorting order from the beginning
+    while (low < arr.length - 1 && arr[low] <= arr[low + 1])
+      low++;
 
-      int i1 = getNextValidCharIndex(str1, index1);
-      int i2 = getNextValidCharIndex(str2, index2);
+    if (low == arr.length - 1) // if the array is sorted
+      return 0;
 
-      if (i1 < 0 && i2 < 0) // reached the end of both the strings
-        return true;
+    // find the first number out of sorting order from the end
+    while (high > 0 && arr[high] >= arr[high - 1])
+      high--;
 
-      if (i1 < 0 || i2 < 0) // reached the end of one of the strings
-        return false;
-
-      if (str1.charAt(i1) != str2.charAt(i2)) // check if the characters are equal
-        return false;
-
-      index1 = i1 - 1;
-      index2 = i2 - 1;
+    // find the maximum and minimum of the subarray
+    int subarrayMax = Integer.MIN_VALUE, subarrayMin = Integer.MAX_VALUE;
+    for (int k = low; k <= high; k++) {
+      subarrayMax = Math.max(subarrayMax, arr[k]);
+      subarrayMin = Math.min(subarrayMin, arr[k]);
     }
 
-    return true;
-  }
+    // extend the subarray to include any number which is bigger than the minimum of 
+    // the subarray 
+    while (low > 0 && arr[low - 1] > subarrayMin)
+      low--;
+    // extend the subarray to include any number which is smaller than the maximum of 
+    // the subarray
+    while (high < arr.length - 1 && arr[high + 1] < subarrayMax)
+      high++;
 
-  private static int getNextValidCharIndex(String str, int index) {
-    int backspaceCount = 0;
-    while (index >= 0) {
-      if (str.charAt(index) == '#') // found a backspace character
-        backspaceCount++;
-      else if (backspaceCount > 0) // a non-backspace character
-        backspaceCount--;
-      else
-        break;
-
-      index--; // skip a backspace or a valid character
-    }
-    return index;
+    return high - low + 1;
   }
 
   public static void main(String[] args) {
-    System.out.println(BackspaceCompare.compare("xy#z", "xzz#"));
-    System.out.println(BackspaceCompare.compare("xy#z", "xyz#"));
-    System.out.println(BackspaceCompare.compare("xp#", "xyz##"));    
-    System.out.println(BackspaceCompare.compare("xywrrmp", "xywrrmu#p"));
+    System.out.println(ShortestWindowSort.sort(new int[] { 1, 2, 5, 3, 7, 10, 9, 12 }));
+    System.out.println(ShortestWindowSort.sort(new int[] { 1, 3, 2, 0, -1, 7, 10 }));
+    System.out.println(ShortestWindowSort.sort(new int[] { 1, 2, 3 }));
+    System.out.println(ShortestWindowSort.sort(new int[] { 3, 2, 1 }));
+    System.out.println(ShortestWindowSort.sortSolution(new int[] { 1, 2, 5, 3, 7, 10, 9, 12 }));
+    System.out.println(ShortestWindowSort.sortSolution(new int[] { 1, 3, 2, 0, -1, 7, 10 }));
+    System.out.println(ShortestWindowSort.sortSolution(new int[] { 1, 2, 3 }));
+    System.out.println(ShortestWindowSort.sortSolution(new int[] { 3, 2, 1 }));
   }
 }
