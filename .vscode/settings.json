@@ -2,6 +2,7 @@
     "java.project.sourcePaths": [
         "sliding window",
         "two pointers",
-        "fast and slow"
+        "fast and slow",
+        "Problems"
     ]
 }
