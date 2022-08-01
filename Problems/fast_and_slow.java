@@ -9,29 +9,29 @@ class ListNode {
 
 class LinkedListCycleLength {
 
-public static int findCycleLength(ListNode head) {
-    ListNode fast = head; ListNode slow = head;
-    while(fast != null && fast.next != null){
+  public static int findCycleLength(ListNode head) {
+      ListNode fast = head; ListNode slow = head;
+      while(fast != null && fast.next != null){
+          fast = fast.next.next;
+          slow = slow.next;
+          if (fast == slow){
+              return calculateLength(slow);
+
+          }
+      }
+      return 0;
+  }
+    public static int findCycleLengthSolution(ListNode head) {
+      ListNode slow = head;
+      ListNode fast = head;
+      while (fast != null && fast.next != null) {
         fast = fast.next.next;
         slow = slow.next;
-        if (fast == slow){
-            return calculateLength(slow);
-
-        }
+        if (slow == fast) // found the cycle
+          return calculateLength(slow);
+      }
+      return 0;
     }
-    return 0;
-}
-  public static int findCycleLengthSolution(ListNode head) {
-    ListNode slow = head;
-    ListNode fast = head;
-    while (fast != null && fast.next != null) {
-      fast = fast.next.next;
-      slow = slow.next;
-      if (slow == fast) // found the cycle
-        return calculateLength(slow);
-    }
-    return 0;
-  }
 
 
   private static int calculateLength(ListNode slow) {
